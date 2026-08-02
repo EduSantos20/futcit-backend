@@ -1,12 +1,13 @@
-FROM eclipse-temurin:21-jdk-alpine AS build
+FROM ubuntu:latest AS build
 LABEL authors="Eduar"
 
 WORKDIR /app
-COPY mvnw .
-COPY .mvn .mvn
-COPY pom.xml .
+COPY . .
 
-RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
+RUN apt-get update && \
+    apt-get install -y openjdk-25-jdk maven git curl && \
+    rm -rf /var/lib/apt/lists/*
+
 
 COPY src ./src
 RUN ./mvnw clean package -DskipTests -B
