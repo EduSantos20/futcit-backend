@@ -1,4 +1,4 @@
-FROM eclipse-temurin:25-jre-alpine
+FROM maven:3.9-eclipse-temurin-25 AS build
 LABEL authors="Eduar"
 
 WORKDIR /app
@@ -11,8 +11,8 @@ RUN apt-get update && \
 
 COPY src ./src
 RUN mvn clean package -DskipTests -B
+FROM eclipse-temurin:25-jre-alpine
 
-FROM maven:3.9-eclipse-temurin-25 AS build
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
