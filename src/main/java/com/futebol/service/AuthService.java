@@ -26,7 +26,7 @@ public class AuthService {
 
     // novos campos
     private final PasswordResetTokenRepository tokenRepo;
-    private final EmailService emailService;
+    //private final EmailService emailService;
 
     @Value("${app.frontend.url:http://localhost:5173}")
     private String frontendUrl;
@@ -94,7 +94,7 @@ public class AuthService {
             // monta link (frontend)
             String link = frontendUrl + "/reset-senha?token=" + token;
 
-            emailService.sendResetPasswordEmail(u.getEmail(), link);
+            //emailService.sendResetPasswordEmail(u.getEmail(), link);
         });
         // se email não existir, não faz nada (retorno genérico)
     }
