@@ -47,7 +47,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String token = jwtService.gerar(usuario.getId());
 
         // Redireciona para o frontend passando o token na URL (ou configurando um cookie)
-        String targetUrl = UriComponentsBuilder.fromUriString("http://https://futcit-frontend.vercel.app/oauth2/redirect")
+        String targetUrl = UriComponentsBuilder.fromUriString("https://futcit-frontend.vercel.app/oauth2/redirect")
                 .queryParam("token", token)
                 .build().toUriString();
 
