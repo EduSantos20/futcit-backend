@@ -1,0 +1,82 @@
+spring:
+  application:
+    name: futebol_cidade
+
+  mail:
+    host: ${SMTP_HOST:localhost}
+    port: ${SMTP_PORT:1025}
+    username: ${SMTP_USER:}
+    password: ${SMTP_PASS:}
+    properties:
+      mail:
+        smtp:
+          auth: ${SMTP_AUTH:false}
+          starttls.enable: ${SMTP_STARTTLS:false}
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update        # Flyway cuida do schema; JPA só valida
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: false  # Desabilitado para evitar migrações automáticas; rodar manualmente
+    locations: classpath:db/migration
+    baseline-on-migrate: true   # seguro para banco que já existe
+    baseline-version: 0
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration-ms: 86400000
+  upload:
+    path: ${UPLOAD_PATH:./uploads}
+  frontend:
+    url: ${FRONTEND_URL:http://localhost:5173}
+  mail:
+    from: no-reply@futebol.app
+  reset-password:
+    token-expiration-ms: 3600000  # 1 hora
+
+server:
+  port: ${PORT}
+
+logging:
+  level:
+    com.futebol: DEBUG
+    org.springframework.security: WARN
+    org.flywaydb: INFO
+
+
