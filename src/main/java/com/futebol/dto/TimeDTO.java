@@ -13,9 +13,10 @@ public class TimeDTO {
         @NotBlank(message = "Cidade é obrigatória") public String cidade;
         public int numerJogadores;
         public String horariosDisponiveis;
+        public String instagram;
     }
     @Data public static class Response {
-        public String id, nome, escudoUrl, bairro, cidade, horariosDisponiveis;
+        public String id, nome, escudoUrl, bairro, cidade, horariosDisponiveis, instagram, whatsapp;
         public int numerJogadores;
         public StatusDesafio statusDesafio;
         public String usuarioId, usuarioNome;

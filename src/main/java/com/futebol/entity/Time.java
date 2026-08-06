@@ -27,6 +27,7 @@ public class Time {
 
     private int numerJogadores;
     private String horariosDisponiveis;
+    private String instagram;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

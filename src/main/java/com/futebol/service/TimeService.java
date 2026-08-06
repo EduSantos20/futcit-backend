@@ -28,20 +28,20 @@ public class TimeService {
 
     private static final int LIMITE_TIMES = 2;
 
-    public List<TimeDTO.Response> listarTodos() {
-        return repo.findAll().stream().map(this::toResponse).toList();
+    public List<TimeDTO.Response> listarTodos(Usuario viewer) {
+        return repo.findAll().stream().map(t -> toResponse(t, viewer)).toList();
     }
 
-    public List<TimeDTO.Response> listarDisponiveis() {
-        return repo.findByStatusDesafio(StatusDesafio.DISPONIVEL).stream().map(this::toResponse).toList();
+    public List<TimeDTO.Response> listarDisponiveis(Usuario viewer) {
+        return repo.findByStatusDesafio(StatusDesafio.DISPONIVEL).stream().map(t -> toResponse(t, viewer)).toList();
     }
 
-    public TimeDTO.Response buscarPorId(String id) {
-        return toResponse(buscar(id));
+    public TimeDTO.Response buscarPorId(String id, Usuario viewer) {
+        return toResponse(buscar(id), viewer);
     }
 
     public List<TimeDTO.Response> meusTimes(Usuario u) {
-        return repo.findByUsuarioId(u.getId()).stream().map(this::toResponse).toList();
+        return repo.findByUsuarioId(u.getId()).stream().map(t -> toResponse(t, u)).toList();
     }
 
     @Transactional
@@ -54,9 +54,10 @@ public class TimeService {
                 .nome(req.getNome()).bairro(req.getBairro()).cidade(req.getCidade())
                 .numerJogadores(req.getNumerJogadores())
                 .horariosDisponiveis(req.getHorariosDisponiveis())
+                .instagram(req.getInstagram())
                 .statusDesafio(StatusDesafio.INDISPONIVEL)
                 .usuario(u).build();
-        return toResponse(repo.save(t));
+        return toResponse(repo.save(t), u);
     }
 
     @Transactional
@@ -65,7 +66,8 @@ public class TimeService {
         t.setNome(req.getNome()); t.setBairro(req.getBairro()); t.setCidade(req.getCidade());
         t.setNumerJogadores(req.getNumerJogadores());
         t.setHorariosDisponiveis(req.getHorariosDisponiveis());
-        return toResponse(repo.save(t));
+        t.setInstagram(req.getInstagram());
+        return toResponse(repo.save(t), u);
     }
 
     // ── Salvar escudo (upload de imagem) ──────────────────────────────────────
@@ -106,7 +108,7 @@ public class TimeService {
 
             time.setEscudoUrl("/uploads/" + nomeArquivo);
 
-            return toResponse(repo.save(time));
+            return toResponse(repo.save(time), usuario);
 
         } catch (IOException e) {
             throw new RuntimeException("Erro ao salvar escudo: " + e.getMessage());
@@ -118,7 +120,7 @@ public class TimeService {
         Time t = buscarDoUsuario(id, u);
         t.setStatusDesafio(t.getStatusDesafio() == StatusDesafio.DISPONIVEL
                 ? StatusDesafio.INDISPONIVEL : StatusDesafio.DISPONIVEL);
-        return toResponse(repo.save(t));
+        return toResponse(repo.save(t), u);
     }
 
     @Transactional
@@ -142,7 +144,7 @@ public class TimeService {
     }
 
     // ── Mapper ────────────────────────────────────────────────────────────────
-    public TimeDTO.Response toResponse(Time t) {
+    public TimeDTO.Response toResponse(Time t, Usuario viewer) {
         TimeDTO.Response r = new TimeDTO.Response();
         r.setId(t.getId());
         r.setNome(t.getNome());
@@ -151,6 +153,7 @@ public class TimeService {
         r.setCidade(t.getCidade());
         r.setNumerJogadores(t.getNumerJogadores());
         r.setHorariosDisponiveis(t.getHorariosDisponiveis());
+        r.setInstagram(t.getInstagram());
         r.setStatusDesafio(t.getStatusDesafio());
         r.setUsuarioId(t.getUsuario().getId());
         r.setUsuarioNome(t.getUsuario().getNome());
@@ -170,6 +173,7 @@ public class TimeService {
 
         return r;
     }
+
     @Transactional
 public void removerMembro(String timeId, String membroId, Usuario usuario) {
     // Verifica se o usuário é dono do time

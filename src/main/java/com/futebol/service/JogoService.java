@@ -195,8 +195,8 @@ public class JogoService {
         JogoDTO.Response r = new JogoDTO.Response();
 
         r.setId(j.getId());
-        r.setTimeDesafiante(timeService.toResponse(j.getTimeDesafiante()));
-        r.setTimeDesafiado(timeService.toResponse(j.getTimeDesafiado()));
+        r.setTimeDesafiante(timeService.toResponse(j.getTimeDesafiante(), null));
+        r.setTimeDesafiado(timeService.toResponse(j.getTimeDesafiado(), null));
         r.setDataJogo(j.getDataJogo());
         r.setHorarioJogo(j.getHorarioJogo());
         r.setTemCampo(j.isTemCampo());

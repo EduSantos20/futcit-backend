@@ -22,18 +22,18 @@ public class TimeController {
     private String uploadPath;
 
     @GetMapping("/publicos")
-    public ResponseEntity<List<TimeDTO.Response>> publicos() {
-        return ResponseEntity.ok(service.listarTodos());
+    public ResponseEntity<List<TimeDTO.Response>> publicos(@AuthenticationPrincipal Usuario u) {
+        return ResponseEntity.ok(service.listarTodos(u));
     }
 
     @GetMapping("/disponiveis")
-    public ResponseEntity<List<TimeDTO.Response>> disponiveis() {
-        return ResponseEntity.ok(service.listarDisponiveis());
+    public ResponseEntity<List<TimeDTO.Response>> disponiveis(@AuthenticationPrincipal Usuario u) {
+        return ResponseEntity.ok(service.listarDisponiveis(u));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TimeDTO.Response> buscar(@PathVariable String id) {
-        return ResponseEntity.ok(service.buscarPorId(id));
+    public ResponseEntity<TimeDTO.Response> buscar(@PathVariable String id, @AuthenticationPrincipal Usuario u) {
+        return ResponseEntity.ok(service.buscarPorId(id, u));
     }
 
     @GetMapping("/meus")
@@ -67,10 +67,10 @@ public class TimeController {
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping("/{id}/membros/{membroId}")
-public ResponseEntity<Void> removerMembro(@PathVariable String id,
+    public ResponseEntity<Void> removerMembro(@PathVariable String id,
                                            @PathVariable String membroId,
                                            @AuthenticationPrincipal Usuario u) {
-    service.removerMembro(id, membroId, u);
+        service.removerMembro(id, membroId, u);
     return ResponseEntity.noContent().build();
-}
+    }
 }
