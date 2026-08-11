@@ -27,6 +27,7 @@ public class SolicitacaoTime {
     @Column(nullable = false)
     private TipoSolicitacao tipo;  // ENTRADA | SAIDA
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusSolicitacao status = StatusSolicitacao.PENDENTE;

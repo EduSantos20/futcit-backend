@@ -32,6 +32,7 @@ public class Jogo {
     private String nomeCampo;
     private String localCampo;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusJogo status = StatusJogo.PENDENTE;

@@ -38,6 +38,7 @@ public class Time {
     private String horariosDisponiveis;
     private String instagram;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusDesafio statusDesafio = StatusDesafio.INDISPONIVEL;

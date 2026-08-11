@@ -23,6 +23,7 @@ public class Usuario {
     @Column(nullable = false)
     private String senha;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipoUsuario tipoUsuario = TipoUsuario.DONO;
