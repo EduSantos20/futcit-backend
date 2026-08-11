@@ -21,6 +21,11 @@ public class UserController {
         return ResponseEntity.ok(usuarioService.toDTO(usuarioLogado));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable String id) {
+        return ResponseEntity.ok(usuarioService.buscarPorId(id));
+    }
+
     @PutMapping("/atualizar-perfil")
     public ResponseEntity<UsuarioDTO> atualizarPerfil(
             @AuthenticationPrincipal Usuario usuarioLogado,

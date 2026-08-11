@@ -28,7 +28,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
   flyway:
-    enabled: false  # Desabilitado para evitar migrações automáticas; rodar manualmente
+    enabled: true  # Habilitado para gerenciar as migrações automaticamente
     locations: classpath:db/migration
     baseline-on-migrate: true   # seguro para banco que já existe
     baseline-version: 0
@@ -61,8 +61,6 @@ app:
   jwt:
     secret: ${JWT_SECRET}
     expiration-ms: 86400000
-  upload:
-    path: ${UPLOAD_PATH:./uploads}
   frontend:
     url: ${FRONTEND_URL:http://localhost:5173}
   mail:

@@ -3,11 +3,18 @@ package com.futebol.entity;
 import com.futebol.enums.StatusDesafio;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "times")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Time {
 
     @Id
@@ -17,7 +24,9 @@ public class Time {
     @Column(nullable = false)
     private String nome;
 
-    private String escudoUrl;
+    @JdbcTypeCode(SqlTypes.LONGVARBINARY)
+    @Column(columnDefinition = "bytea")
+    private byte[] escudo;
 
     @Column(nullable = false)
     private String bairro;

@@ -45,8 +45,10 @@ public class SecurityConfig {
                                 "/api/times/*/membros",   // membros são público
                                 "/api/jogos/confrontos"
                         ).permitAll()
-                        // Uploads
-                        .requestMatchers("/uploads/**").permitAll()
+                        // Escudos de times
+                        .requestMatchers("/api/times/*/escudo").permitAll()
+                        // Avaliações públicas
+                        .requestMatchers(HttpMethod.GET, "/api/avaliacoes/**", "/api/usuarios/**").permitAll()
                         // Tudo mais requer autenticação
                         .anyRequest().authenticated()
                 )

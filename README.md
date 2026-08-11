@@ -69,6 +69,10 @@ Estrutura rápida do repositório
 Documentação da API
 Uma documentação detalhada de endpoints e exemplos está em `futcit-backend/API.md`.
 
+### Atualizações recentes
+- Times agora possuem campos de Instagram e WhatsApp.
+- Privacidade: O campo WhatsApp de um time é visível apenas para o dono do time na API. O Instagram é público.
+
 Contribuindo
 Leia `CONTRIBUTING.md` para convenções, como rodar testes e fluxo de PR.
 

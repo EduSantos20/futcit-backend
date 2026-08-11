@@ -18,8 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TimeController {
     private final TimeService service;
-    @Value("${app.upload.path}")
-    private String uploadPath;
 
     @GetMapping("/publicos")
     public ResponseEntity<List<TimeDTO.Response>> publicos(@AuthenticationPrincipal Usuario u) {
@@ -53,7 +51,14 @@ public class TimeController {
 
     @PostMapping("/{id}/escudo")
     public ResponseEntity<TimeDTO.Response> escudo(@PathVariable String id, @RequestParam("arquivo") MultipartFile arquivo, @AuthenticationPrincipal Usuario u) {
-        return ResponseEntity.ok(service.uploadEscudo(id, arquivo, u, uploadPath));
+        return ResponseEntity.ok(service.uploadEscudo(id, arquivo, u));
+    }
+
+    @GetMapping("/{id}/escudo")
+    public ResponseEntity<byte[]> getEscudo(@PathVariable String id) {
+        return ResponseEntity.ok()
+                .header("Content-Type", "image/png")
+                .body(service.getEscudoBytes(id));
     }
 
     @PatchMapping("/{id}/disponibilidade")

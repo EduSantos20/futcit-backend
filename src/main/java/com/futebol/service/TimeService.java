@@ -72,47 +72,44 @@ public class TimeService {
 
     // ── Salvar escudo (upload de imagem) ──────────────────────────────────────
     @Transactional
-    public TimeDTO.Response uploadEscudo(String id, MultipartFile arquivo, Usuario usuario, String uploadPath) {
+    public TimeDTO.Response uploadEscudo(String id, MultipartFile arquivo, Usuario usuario) {
         Time time = repo.findByIdAndUsuarioId(id, usuario.getId())
                 .orElseThrow(() -> new RuntimeException("Time não encontrado ou sem permissão"));
         try {
-
             if (arquivo.isEmpty()) {
                 throw new RuntimeException("Arquivo vazio");
             }
-
             // verifica se é imagem
             String tipo = arquivo.getContentType();
-
             if (tipo == null || !tipo.startsWith("image/")) {
                 throw new RuntimeException("Arquivo enviado não é uma imagem");
             }
-
             // limita tamanho
             if (arquivo.getSize() > 3 * 1024 * 1024) {
                 throw new RuntimeException("Imagem muito grande. Máximo 3MB");
             }
 
-            String nomeArquivo = "logo_" + UUID.randomUUID() + ".png";
-
-            Path destino = Paths.get(uploadPath, nomeArquivo);
-
-            Files.createDirectories(destino.getParent());
-
             // converte e redimensiona imagem
+            java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
             net.coobird.thumbnailator.Thumbnails
                     .of(arquivo.getInputStream())
                     .size(300, 300)
                     .outputFormat("png")
-                    .toFile(destino.toFile());
+                    .toOutputStream(out);
 
-            time.setEscudoUrl("/uploads/" + nomeArquivo);
+            time.setEscudo(out.toByteArray());
 
             return toResponse(repo.save(time), usuario);
 
         } catch (IOException e) {
             throw new RuntimeException("Erro ao salvar escudo: " + e.getMessage());
         }
+    }
+    
+    public byte[] getEscudoBytes(String id) {
+        Time time = buscar(id);
+        if (time.getEscudo() == null) throw new RuntimeException("Escudo não encontrado");
+        return time.getEscudo();
     }
 
     @Transactional
@@ -148,7 +145,7 @@ public class TimeService {
         TimeDTO.Response r = new TimeDTO.Response();
         r.setId(t.getId());
         r.setNome(t.getNome());
-        r.setEscudoUrl(t.getEscudoUrl());
+        r.setEscudoUrl(t.getEscudo() != null ? "/api/times/" + t.getId() + "/escudo" : null);
         r.setBairro(t.getBairro());
         r.setCidade(t.getCidade());
         r.setNumerJogadores(t.getNumerJogadores());
@@ -173,6 +170,7 @@ public class TimeService {
 
         return r;
     }
+
 
     @Transactional
 public void removerMembro(String timeId, String membroId, Usuario usuario) {

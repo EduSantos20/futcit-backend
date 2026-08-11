@@ -13,6 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final AvaliacaoService avaliacaoService;
+
+    public UsuarioDTO buscarPorId(String id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        return toDTO(usuario);
+    }
 
     @Transactional
     public UsuarioDTO atualizarPerfil(String usuarioId, UsuarioDTO dto) {
@@ -54,6 +61,8 @@ public class UsuarioService {
         dto.setFotoPerfil(usuario.getFotoPerfil());
         dto.setTipoUsuario(usuario.getTipoUsuario());
         dto.setCriadoEm(usuario.getCriadoEm());
+        dto.setMediaEstrelas(avaliacaoService.calcularMedia(usuario.getId()));
+        dto.setComentarios(avaliacaoService.listar(usuario.getId()));
         return dto;
     }
 }
