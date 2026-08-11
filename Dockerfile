@@ -15,7 +15,7 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 
 # Compila e gera o JAR
-RUN mvn clean package -DskipTests -B
+RUN mvn clean package -DskipTests
 
 # Verifica se o JAR foi realmente criado
 RUN ls -lah /app/target
