@@ -15,7 +15,7 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 
 # Compila e gera o JAR
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -B
 
 # Apenas para confirmar no log do Railway
 RUN ls -lah /app/target
