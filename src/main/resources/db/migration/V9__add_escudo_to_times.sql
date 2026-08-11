@@ -1,0 +1,2 @@
+ALTER TABLE times ADD COLUMN escudo BYTEA;
+ALTER TABLE times DROP COLUMN escudo_url;

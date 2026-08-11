@@ -1,0 +1,2 @@
+ALTER TABLE times ADD COLUMN instagram VARCHAR(255);
+ALTER TABLE times ADD COLUMN whatsapp VARCHAR(20);
