@@ -63,11 +63,16 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsSource() {
         CorsConfiguration cfg = new CorsConfiguration();
-        cfg.setAllowedOriginPatterns(List.of("*"));
+        //apenas esse dominio manda Cors
+        cfg.setAllowedOriginPatterns(List.of("https://futcit-frontend.vercel.app/times"));
+        //Metodos permitidos
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        // 3. Cabeçalhos permitidos: '*' ou uma lista explícita é o correto aqui
         cfg.setAllowedHeaders(List.of("*"));
+        // 4. Cabeçalhos expostos (para o frontend ler o JWT no header, por exemplo)
         cfg.setExposedHeaders(List.of("Authorization"));
-        cfg.setAllowCredentials(false);
+        // 5. Necessário para suportar cookies/auth quando permitido explicitamente
+        cfg.setAllowCredentials(true);
         cfg.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cfg);

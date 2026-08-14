@@ -73,7 +73,7 @@ server:
 
 logging:
   level:
-    com.futebol: DEBUG
+    com.futebol: INFO
     org.springframework.security: WARN
     org.flywaydb: INFO
 
