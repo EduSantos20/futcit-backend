@@ -64,7 +64,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsSource() {
         CorsConfiguration cfg = new CorsConfiguration();
         //apenas esse dominio manda Cors
-        cfg.setAllowedOriginPatterns(List.of("https://futcit-frontend.vercel.app/times"));
+        cfg.setAllowedOriginPatterns(List.of("https://futcit-frontend.vercel.app"));
         //Metodos permitidos
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         // 3. Cabeçalhos permitidos: '*' ou uma lista explícita é o correto aqui
