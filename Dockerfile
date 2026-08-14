@@ -28,9 +28,11 @@ FROM eclipse-temurin:21-jre-alpine
 
 # Criar um usuário não-root para rodar a aplicação
 RUN addgroup -S spring && adduser -S spring -G spring
-USER spring:spring
-
 WORKDIR /app
+
+# Ajustar a permissão do diretório para o novo usuário
+RUN chown -R spring:spring /app
+USER spring:spring
 
 # Copia o JAR do estágio de build
 COPY --from=build /app/target/*.jar app.jar
