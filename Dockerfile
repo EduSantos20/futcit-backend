@@ -26,10 +26,20 @@ RUN ls -lah /app/target
 # =========================
 FROM eclipse-temurin:21-jre-alpine
 
+# Criar um usuário não-root para rodar a aplicação
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+
 WORKDIR /app
 
+# Copia o JAR do estágio de build
 COPY --from=build /app/target/*.jar app.jar
+
+
+# Define limites básicos de memória para a JVM (ajuste conforme necessário)
+ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Utiliza os JAVA_OPTS na execução
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
