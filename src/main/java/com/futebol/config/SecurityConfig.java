@@ -38,6 +38,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(a -> a
                         // Auth público
                         .requestMatchers("/api/auth/**", "/login/**", "/oauth2/**").permitAll()
+                        // Precisa vir antes da regra genérica de GET /api/times/* abaixo
+                        .requestMatchers(HttpMethod.GET, "/api/times/meus").authenticated()
                         // Times públicos (leitura)
                         .requestMatchers(HttpMethod.GET,
                                 "/api/times/publicos",
@@ -45,10 +47,14 @@ public class SecurityConfig {
                                 "/api/times/*/membros",   // membros são público
                                 "/api/jogos/confrontos"
                         ).permitAll()
+                        // Perfil público de um time (usado pela página de perfil do time)
+                        .requestMatchers(HttpMethod.GET, "/api/times/*").permitAll()
                         // Escudos de times
                         .requestMatchers("/api/times/*/escudo").permitAll()
                         // Avaliações públicas
                         .requestMatchers(HttpMethod.GET, "/api/avaliacoes/**", "/api/usuarios/**").permitAll()
+                        // Galeria de fotos: leitura pública, postar/remover exige login
+                        .requestMatchers(HttpMethod.GET, "/api/fotos/**").permitAll()
                         // Tudo mais requer autenticação
                         .anyRequest().authenticated()
                 )
