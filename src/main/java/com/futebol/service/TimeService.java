@@ -10,6 +10,8 @@ import com.futebol.repository.MembroTimeRepository;
 import com.futebol.repository.TimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,12 +30,17 @@ public class TimeService {
 
     private static final int LIMITE_TIMES = 2;
 
-    public List<TimeDTO.Response> listarTodos(Usuario viewer) {
-        return repo.findAll().stream().map(t -> toResponse(t, viewer)).toList();
+    // Busca paginada de times, com filtros opcionais.
+    // status = null => qualquer status (usado em "/publicos")
+    // status = DISPONIVEL => só quem está procurando jogo (usado em "/disponiveis")
+    public Page<TimeDTO.Response> buscar(StatusDesafio status, String cidade, String bairro,
+                                          String busca, Pageable pageable, Usuario viewer) {
+        return repo.buscar(status, vazioParaNulo(cidade), vazioParaNulo(bairro), vazioParaNulo(busca), pageable)
+                .map(t -> toResponse(t, viewer));
     }
 
-    public List<TimeDTO.Response> listarDisponiveis(Usuario viewer) {
-        return repo.findByStatusDesafio(StatusDesafio.DISPONIVEL).stream().map(t -> toResponse(t, viewer)).toList();
+    private String vazioParaNulo(String s) {
+        return (s == null || s.isBlank()) ? null : s.trim();
     }
 
     public TimeDTO.Response buscarPorId(String id, Usuario viewer) {

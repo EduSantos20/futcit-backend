@@ -1,11 +1,17 @@
 package com.futebol.controller;
 
+import com.futebol.dto.PageResponse;
 import com.futebol.dto.TimeDTO;
 import com.futebol.entity.Usuario;
+import com.futebol.enums.StatusDesafio;
 import com.futebol.service.TimeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +25,28 @@ import java.util.List;
 public class TimeController {
     private final TimeService service;
 
+    // GET /api/times/publicos?cidade=&bairro=&busca=&page=0&size=12&sort=nome,asc
     @GetMapping("/publicos")
-    public ResponseEntity<List<TimeDTO.Response>> publicos(@AuthenticationPrincipal Usuario u) {
-        return ResponseEntity.ok(service.listarTodos(u));
+    public ResponseEntity<PageResponse<TimeDTO.Response>> publicos(
+            @RequestParam(required = false) String cidade,
+            @RequestParam(required = false) String bairro,
+            @RequestParam(required = false) String busca,
+            @PageableDefault(size = 12, sort = "criadoEm", direction = Sort.Direction.DESC) Pageable pageable,
+            @AuthenticationPrincipal Usuario u) {
+        Page<TimeDTO.Response> pagina = service.buscar(null, cidade, bairro, busca, pageable, u);
+        return ResponseEntity.ok(PageResponse.of(pagina));
     }
 
+    // GET /api/times/disponiveis?cidade=&bairro=&busca=&page=0&size=12
     @GetMapping("/disponiveis")
-    public ResponseEntity<List<TimeDTO.Response>> disponiveis(@AuthenticationPrincipal Usuario u) {
-        return ResponseEntity.ok(service.listarDisponiveis(u));
+    public ResponseEntity<PageResponse<TimeDTO.Response>> disponiveis(
+            @RequestParam(required = false) String cidade,
+            @RequestParam(required = false) String bairro,
+            @RequestParam(required = false) String busca,
+            @PageableDefault(size = 12, sort = "criadoEm", direction = Sort.Direction.DESC) Pageable pageable,
+            @AuthenticationPrincipal Usuario u) {
+        Page<TimeDTO.Response> pagina = service.buscar(StatusDesafio.DISPONIVEL, cidade, bairro, busca, pageable, u);
+        return ResponseEntity.ok(PageResponse.of(pagina));
     }
 
     @GetMapping("/{id}")
